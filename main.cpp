@@ -63,14 +63,40 @@ void instDecExec(unsigned int instWord)
 
 	if(opcode == 0x33){		// R Instructions
 		switch(funct3){
-			case 0: if(funct7 == 32) //32 is in 0x20 in decimal
-			{
+			case 0: if(funct7 == 32) {
 								cout << "\tSUB\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
 							}
 							else {
 								cout << "\tADD\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
 							}
 							break;
+				
+			case 4: 				cout <<"\tXOR\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							break;
+			
+			case 1:					cout <<"\tSLL\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							break;
+				
+			case 2:					cout <<"\tSLT\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							break;
+				
+			case 3:					cout <<"\tSLTU\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							break;
+				
+			case 5: if(funct7 == 32) {
+								cout <<"\tSRA\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							}
+							else {
+								cout <<"\tSRL\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							}
+							break;
+				
+			case 6:					cout <<"\tOR\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							break;
+				
+			case 7:					cout <<"\tAND\tx" << rd << ", x" << rs1 << ", x" << rs2 << "\n";
+							break;
+				
 			default:
 							cout << "\tUnkown R Instruction \n";
 		}
@@ -78,6 +104,25 @@ void instDecExec(unsigned int instWord)
 		switch(funct3){
 			case 0:	cout << "\tADDI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
 					break;
+				
+			case 1:	cout << "\tSLLI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+					break;
+				
+			case 2:	cout << "\tSLTI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+					break;
+				
+			case 3:	cout << "\tSLTIU\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+					break;
+				
+			case 4:	cout << "\tXORI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+					break;
+				
+			case 5:
+				
+				
+			case 1:
+				
+				
 			default:
 					cout << "\tUnkown I Instruction \n";
 		}
@@ -111,7 +156,7 @@ int main(int argc,const char *argv[]){
 							(((unsigned char)memory[pc+3])<<24);
 				pc += 4;
 				// remove the following line once you have a complete simulator
-				if(pc==40) break;			// stop when PC reached address 32
+				if(pc==4) break;			// stop when PC reached address 32
 				instDecExec(instWord);
 		}
 	} else emitError("Cannot access input file\n");
