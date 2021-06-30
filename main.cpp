@@ -102,6 +102,12 @@ void instDecExec(unsigned int instWord)
 		}
 	} else if(opcode == 0x13){	// I instructions
 		switch(funct3){
+				
+			if(I_imm>0x800)
+			{
+				I_imm = (I_imm xor 0xFFF)+1;
+			   	I_imm =  -I_imm;
+			}
 			case 0:	cout << "\tADDI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
 					break;
 				
@@ -132,8 +138,10 @@ void instDecExec(unsigned int instWord)
 				
 			case 6: cout << "\tORI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
 				break;
+				
 			case 7: cout << "\tANDI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
 				break
+					
 			default:
 					cout << "\tUnkown I Instruction \n";
 		}
@@ -141,21 +149,27 @@ void instDecExec(unsigned int instWord)
 	
 	else if(opcode == 0x3) //Second I type
 	{
+		if(I_imm>0x800)
+			{
+				I_imm = (I_imm xor 0xFFF)+1;
+			   	I_imm =  -I_imm;
+			}
+		
 		switch (funct3){
 		
-			case 0: cout << "\tLB\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+			case 0: cout << "\tLB\tx" << rd << ", " << I_imm << " (x" << rs1 <<") "<< "\n";
 				break;
 				
-			case 1: cout << "\tLH\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+			case 1: cout << "\tLH\tx" << rd << ", " << I_imm << " (x" << rs1 <<") "<< "\n";
 				break;
 				
-			case 2: cout << "\tLW\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+			case 2: cout << "\tLW\tx" << rd << ", " << I_imm << " (x" << rs1 <<") "<< "\n";
 				break;
 				
-			case 4: cout << "\tLBu\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+			case 4: cout << "\tLBu\tx" << rd << ", " << I_imm << " (x" << rs1 <<") "<< "\n";
 				break;
 				
-			case 5: cout << "\tLHu\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+			case 5: cout << "\tLHu\tx" << rd << ", " << I_imm << " (x" << rs1 <<") "<< "\n";
 				break;
 		
 		}
@@ -163,7 +177,16 @@ void instDecExec(unsigned int instWord)
 	
 	else if (opcode == 0x23) //S type
 	{
+		if(S_imm>0x800)
+			{
+				S_imm = (S_imm xor 0xFFF)+1;
+			   	S_imm =  -S_imm;
+			}
 		
+		switch (funct3)
+		{
+			case 0:  
+		}
 	}
 		
 	else if (opcode == 0x63) //B type
