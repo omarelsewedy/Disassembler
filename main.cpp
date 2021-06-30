@@ -55,6 +55,7 @@ void instDecExec(unsigned int instWord)
 	funct3 = (instWord >> 12) & 0x00000007;
 	rs1 = (instWord >> 15) & 0x0000001F;
 	rs2 = (instWord >> 20) & 0x0000001F;
+	funct7 = (instWord >> 25) & 0x0000007F;
 
 	// â€” inst[31] â€” inst[30:25] inst[24:21] inst[20]
 	I_imm = ((instWord >> 20) & 0x7FF) | (((instWord >> 31) ? 0xFFFFF800 : 0x0));
@@ -103,15 +104,18 @@ void instDecExec(unsigned int instWord)
 	} else if(opcode == 0x13){	// I instructions
 		switch(funct3){
 				
-			if(I_imm>0x800)
+			/*if(I_imm>0x800)
 			{
 				I_imm = (I_imm xor 0xFFF)+1;
 			   	I_imm =  -I_imm;
-			}
+			}*/
+				
+			
 			case 0:	cout << "\tADDI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
 					break;
 				
-			case 1:	cout << "\tSLLI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
+			case 1:	I_imm = (instWord >> 25) & 0x0000007F; //imm[5:11]
+				cout << "\tSLLI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
 					break;
 				
 			case 2:	cout << "\tSLTI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
@@ -123,7 +127,7 @@ void instDecExec(unsigned int instWord)
 			case 4:	cout << "\tXORI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
 					break;
 				
-			case 5: 
+			case 5: I_imm = (instWord >> 25) & 0x0000007F; //imm[5:11]
 				if (funct7 == 0)
 				{
 					cout << "\tSRLI\tx" << rd << ", x" << rs1 << ", " << hex << "0x" << (int)I_imm << "\n";
@@ -149,11 +153,11 @@ void instDecExec(unsigned int instWord)
 	
 	else if(opcode == 0x3) //Second I type
 	{
-		if(I_imm>0x800)
+		/*if(I_imm>0x800)
 			{
 				I_imm = (I_imm xor 0xFFF)+1;
 			   	I_imm =  -I_imm;
-			}
+			}*/
 		
 		switch (funct3){
 		
@@ -177,25 +181,70 @@ void instDecExec(unsigned int instWord)
 	
 	else if (opcode == 0x23) //S type
 	{
-		if(S_imm>0x800)
+		/*if(S_imm>0x800)
 			{
 				S_imm = (S_imm xor 0xFFF)+1;
 			   	S_imm =  -S_imm;
-			}
-		
+			}*/
+				
 		switch (funct3)
 		{
-			case 0:  
+			case 0: cout << "\tSB\tx" << rs2 << ", " << S_imm << " (x" << rs1 <<") "<< "\n";
+				break;
+				
+			case 1: cout << "\tSH\tx" << rs2 << ", " << S_imm << " (x" << rs1 <<") "<< "\n";
+				break;
+				
+			case 2: cout << "\tSW\tx" << rs2 << ", " << S_imm << " (x" << rs1 <<") "<< "\n";
+				break;
 		}
 	}
 		
 	else if (opcode == 0x63) //B type
+	{
+		int a = (instWord >> 8) & 0x0000000F;    //1:4
+		int b = (instWord >> 25) & 0x0000003F;  // 5:10
+		int c = (instWord >> 7) & 0x00000001;   //11
+		int d = (instWord >> 31) & 0x00000001;   //12
+		int e = d + c + b + a  //branch address
+		
+		switch (funct3)
+		{
+			case 0: cout << "\tBEQ\t"  << " x" << rs1 << ", x" << rs2 <<", "<< e <<"\n";
+				break;
+				
+			case 1: cout << "\tBNE\t"  << " x" << rs1 << ", x" << rs2 <<", "<< e <<"\n";
+				break;
+				
+			case 4: cout << "\tBLT\t"  << " x" << rs1 << ", x" << rs2 <<", "<< e <<"\n";
+				break;
+				
+			case 5: cout << "\tBGE\t"  << " x" << rs1 << ", x" << rs2 <<", "<< e <<"\n";
+				break;
+				
+			case 6: cout << "\tBLTu\t"  << " x" << rs1 << ", x" << rs2 <<", "<< e <<"\n";
+				break;
+				
+			case 7: cout << "\tBGEu\t"  << " x" << rs1 << ", x" << rs2 <<", "<< e <<"\n";
+				break;
+		}
+	}
 		
 	else if (opcode == 0x6F) //JAL
+	{
+		int a = (instWord >> 21) & 0x000003FF;    //1:10
+           	int b = (instWord >> 20) & 0x0000001;     //11
+            	int c = (instWord >> 12) & 0x000000FF;   //12:19
+            	int d = (instWord >> 31) & 0x00000001;   //20
+            	int e = d + c + b + a //branch address
 		
+		if (funct3 == 0)
+			cout << "\tJALR\t" << "x" << rd << ", " << e << "\n";
+		else 
+			cout << "\tJAL\t" << "x" << rd << ", " << e << "\n";
+	}
 		
-	
-	
+	else if (opcode == 0x6F) // U type
 	
 	else {
 		cout << "\tUnkown Instruction \n";
