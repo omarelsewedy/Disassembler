@@ -239,12 +239,32 @@ void instDecExec(unsigned int instWord)
             	int e = d + c + b + a //branch address
 		
 		if (funct3 == 0)
-			cout << "\tJALR\t" << "x" << rd << ", " << e << "\n";
+			cout << "\tJALr\t" << "x" << rd << ", x" << rs1 << ", " << I_imm << "\n";
 		else 
 			cout << "\tJAL\t" << "x" << rd << ", " << e << "\n";
 	}
 		
-	else if (opcode == 0x6F) // U type
+	else if (opcode == 0x37){ // LUI
+		int c = (instWord >> 12) & 0x0000FFFFF;
+		cout << "\tLUI\t" << "x" << rd << ", " << c << "\n";
+	}
+	else if (opcode == 0x17){ // AUIPC
+		int c = (instWord >> 12) & 0x0000FFFFF;
+		cout << "\tAUIPC\t" << "x" << rd << ", " << c << "\n";
+	}
+	
+	else if (opcode == 73){
+		int c = (instWord >> 20) & 0x00000FFF;
+		if(funct3 == 0x0)
+		{
+			if(funct7 == 0x0)
+			{
+				cout<<"\tEcall"<<"\n";
+			}
+		else {
+			cout<<"\tEbreak"<<"\n";
+		}
+	}
 	
 	else {
 		cout << "\tUnkown Instruction \n";
