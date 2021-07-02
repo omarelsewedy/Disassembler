@@ -56,6 +56,14 @@ void instDecExec(unsigned int instWord)
 	rs1 = (instWord >> 15) & 0x0000001F;
 	rs2 = (instWord >> 20) & 0x0000001F;
 	funct7 = (instWord >> 25) & 0x0000007F;
+	
+	
+	C_opcode = instWord & 0x0000007F;
+	C_rd = (instWord >> 7) & 0x0000001F;
+	C_funct3 = (instWord >> 12) & 0x00000007;
+	C_rs1 = (instWord >> 15) & 0x0000001F;
+	C_rs2 = (instWord >> 20) & 0x0000001F;
+	C_funct7 = (instWord >> 25) & 0x0000007F;
 
 	// â€” inst[31] â€” inst[30:25] inst[24:21] inst[20]
 	I_imm = ((instWord >> 20) & 0x7FF) | (((instWord >> 31) ? 0xFFFFF800 : 0x0));
