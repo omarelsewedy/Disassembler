@@ -57,7 +57,7 @@ void instDecExec(unsigned int instWord)
 	rs2 = (instWord >> 20) & 0x0000001F;
 	funct7 = (instWord >> 25) & 0x0000007F;
 	
-	
+	//C INSTRUCTIONS
 	C_opcode = instWord & 0x0000007F;
 	C_rd = (instWord >> 7) & 0x0000001F;
 	C_funct3 = (instWord >> 12) & 0x00000007;
@@ -273,6 +273,22 @@ void instDecExec(unsigned int instWord)
 			cout<<"\tEbreak"<<"\n";
 		}
 	}
+		
+	else if (opcode == 0x0) //C INST OPCODE 00
+	{
+		
+	}
+		
+	else if (opcode == 0X1) //C INST OPCODE 01
+	{
+		
+	}
+		
+	else if (opcode == 0X2) //C INST OPCODE 10
+	{
+		
+	}
+	
 	
 	else {
 		cout << "\tUnkown Instruction \n";
