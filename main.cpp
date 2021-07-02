@@ -57,13 +57,6 @@ void instDecExec(unsigned int instWord)
 	rs2 = (instWord >> 20) & 0x0000001F;
 	funct7 = (instWord >> 25) & 0x0000007F;
 	
-	//C INSTRUCTIONS
-	C_opcode = instWord & 0x0000007F;
-	C_rd = (instWord >> 7) & 0x0000001F;
-	C_funct3 = (instWord >> 12) & 0x00000007;
-	C_rs1 = (instWord >> 15) & 0x0000001F;
-	C_rs2 = (instWord >> 20) & 0x0000001F;
-	C_funct7 = (instWord >> 25) & 0x0000007F;
 
 	// â€” inst[31] â€” inst[30:25] inst[24:21] inst[20]
 	I_imm = ((instWord >> 20) & 0x7FF) | (((instWord >> 31) ? 0xFFFFF800 : 0x0));
@@ -109,7 +102,10 @@ void instDecExec(unsigned int instWord)
 			default:
 							cout << "\tUnkown R Instruction \n";
 		}
-	} else if(opcode == 0x13){	// I instructions
+	} 
+	
+	
+	else if(opcode == 0x13){	// I instructions
 		switch(funct3){
 				
 			/*if(I_imm>0x800)
@@ -274,17 +270,27 @@ void instDecExec(unsigned int instWord)
 		}
 	}
 		
-	else if (opcode == 0x0) //C INST OPCODE 00
+		
+	//C INSTRUCTIONS
+	C_opcode = instWord & 0x0000007F;
+	C_rd = (instWord >> 7) & 0x0000001F;
+	C_funct3 = (instWord >> 12) & 0x00000007;
+	C_rs1 = (instWord >> 15) & 0x0000001F;
+	C_rs2 = (instWord >> 20) & 0x0000001F;
+	C_funct7 = (instWord >> 25) & 0x0000007F;
+		
+		
+	if (C_opcode == 0x0) //C INST OPCODE 00
 	{
 		
 	}
 		
-	else if (opcode == 0X1) //C INST OPCODE 01
+	else if (C_opcode == 0x1) //C INST OPCODE 01
 	{
 		
 	}
 		
-	else if (opcode == 0X2) //C INST OPCODE 10
+	else if (C_opcode == 0x2) //C INST OPCODE 10
 	{
 		
 	}
