@@ -289,8 +289,30 @@ void instDecExec(unsigned int instWord)
 	else if ((opcode = instWord & 0x3 ) == 0x1) //C1 INST OPCODE 01
 	{
 		
+				opcode = instWord & 0x0000003; //C OPCODE -> opcode = instWord & 0x2
+		rd = (instWord >> 7) & 0x0000007; // [7:9]
+		funct2 = (instWord >> 5) & 0x00000003;	// [5:6]
+		rs2 = (instWord >> 2) & 0x0000007; // rs2 [2:4]
+		funct6 = (instWord >> 10) & 0x0000003F; // [10:15]
 		
-		ferferf
+		if ( funct6 == 35){
+			
+			switch (funct2){
+					
+				case 0: cout << "\SUB\tx" << rd << ", x" << rd <<", "<< rs2 <<"\n";  //C.SUB
+					break;
+				
+				case 1: cout << "\XOR\tx" << rd << ", x" << rd <<", "<< rs2 <<"\n";  //C.XOR
+					break;
+					
+				case 2: cout << "\OR\tx" << rd << ", x" << rd <<", "<< rs2 <<"\n";  //C.OR
+					break;
+					
+				case 3: cout <<"\tOR\tx" << rd << ", x" << rd << ", x" << rs2 << "\n"; //C.AND
+					break;
+		
+			}
+		}
 		
 		
 	}
