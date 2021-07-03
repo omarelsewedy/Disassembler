@@ -44,7 +44,7 @@ void printPrefix(unsigned int instA, unsigned int instW){
 
 void instDecExec(unsigned int instWord)
 {
-	unsigned int rd, rs1, rs2, funct3, funct7, opcode;
+	unsigned int rd, rs1, rs2, funct3, funct7, funct2, funct6, opcode;
 	unsigned int I_imm, S_imm, B_imm, U_imm, J_imm;
 	unsigned int address;
 
@@ -179,6 +179,9 @@ void instDecExec(unsigned int instWord)
 				
 			case 5: cout << "\tLHu\tx" << rd << ", " << I_imm << " (x" << rs1 <<") "<< "\n";
 				break;
+				
+			default:
+					cout << "\tUnkown Second I Instruction \n";
 		
 		}
 	}
@@ -231,16 +234,19 @@ void instDecExec(unsigned int instWord)
 				
 			case 7: cout << "\tBGEu\t"  << " x" << rs1 << ", x" << rs2 <<", "<< e <<"\n";
 				break;
+			
+			default:
+				cout << "\tUnkown B Instruction \n";
 		}
 	}
 		
 	else if (opcode == 0x6F) //JAL
 	{
-		int a = (instWord >> 21) & 0x000003FF;    //1:10
-           	int b = (instWord >> 20) & 0x0000001;     //11
-            	int c = (instWord >> 12) & 0x000000FF;   //12:19
-            	int d = (instWord >> 31) & 0x00000001;   //20
-            	int e = d + c + b + a //branch address
+		unsigned int a = (instWord >> 21) & 0x000003FF;    //1:10
+           	unsigned int b = (instWord >> 20) & 0x0000001;     //11
+            	unsigned int c = (instWord >> 12) & 0x000000FF;   //12:19
+            	unsigned int d = (instWord >> 31) & 0x00000001;   //20
+            	unsigned int e = d + c + b + a //branch address
 		
 		if (funct3 == 0)
 			cout << "\tJALr\t" << "x" << rd << ", x" << rs1 << ", " << I_imm << "\n";
@@ -271,7 +277,7 @@ void instDecExec(unsigned int instWord)
 	}
 		
 		
-	//C INSTRUCTIONS
+	/*C INSTRUCTIONS
 	C_opcode = instWord & 0x0000003;
 	C_rd = (instWord >> 7) & 0x0000001F;
 	C_funct3 = (instWord >> 12) & 0x00000007;
@@ -279,6 +285,7 @@ void instDecExec(unsigned int instWord)
 	C_rs2 = (instWord >> 20) & 0x0000001F;
 	C_funct7 = (instWord >> 25) & 0x0000007F;
 	C_funct6 = (
+		*/
 		
 		
 	if ((opcode = instWord & 0x3 ) == 0x0) //C0 INST OPCODE 00 if (opcode = instWord & 0x3)
@@ -287,14 +294,19 @@ void instDecExec(unsigned int instWord)
 		rd = (instWord >> 2) & 0x0007;
 		funct3 = (instWord >> 13) & 0x0007;
 		rs1 = (instWord >> 7) & 0x0007;
-		int a = (instWord >> 5) & 0x0001 //imm 6
-		int b = (instWord >> 6) & 0x0001 //imm 2
-		int c = (instWord >> 10) & 0x0003 //imm[5:3]
-		int d = a + b + c;
+		unsigned int a = (instWord >> 5) & 0x0001 //imm 6
+		unsigned int b = (instWord >> 6) & 0x0001 //imm 2
+		unsigned int c = (instWord >> 10) & 0x0003 //imm[3:5]
+		unsigned int d = a + b + c;
+		
+	        if(d>0x800){
+                d= (d xor 0x001F)+1;
+                d =  -d;
+		}
 		
 		if (funct3 == 0x2)
 		{
-			cout << "\tLW\tx" << rd << ", " << d << " (x" << rs1 <<") "<< "\n";
+			cout << "\tLW\tx" << rd << ", " << (int)d << " (x" << rs1 <<") "<< "\n";
 		}
 		
 		else
@@ -312,12 +324,48 @@ void instDecExec(unsigned int instWord)
 	{
 		
 		opcode = instWord & 0x0003; //C OPCODE -> opcode = instWord & 0x2
-		rd = (instWord >> 7) & 0x0007; // [7:9]
-		funct2 = (instWord >> 5) & 0x0003;	// [5:6]
-		rs2 = (instWord >> 2) & 0x0007; // rs2 [2:4]
+
 		funct6 = (instWord >> 10) & 0x003F; // [10:15]
+		funct3 = (instWord >> 13) & 0x0007; // [13:15]
 		
-		if ( funct6 == 35){
+		if (funct3 == 4){
+		
+			funct2 = (instWord >> 10) & 0003; // [10:11}
+			rd = (instWord >> 7) & 0x0007; // [7:9]
+			unsigned int C1_immA = (instWord >> 2) & 0x001F; // shamt [2:6]
+			unsigned int C1_immB = (instWord >> 12);
+				     C1_immB = 0;
+			unsigned int C1_imm = C1_immA + C1_immB;
+			
+			if(C1_imm>0x800){
+            		C1_imm = (C1_imm xor 0x001F)+1;
+               		C1_imm =  -C1_imm;
+			}
+				
+			switch (funct2){
+				
+				case 0: cout << "\tSRLI\tx" << rd << ", x" << rd << ", " << hex << "0x" << (int)C1_imm << "\n";
+					break;
+					
+				case 1: cout << "\tSRAI\tx" << rd << ", x" << rd << ", " << hex << "0x" << (int)C1_imm << "\n";
+					break;
+					
+				case 2: cout << "\tANDI\tx" << rd << ", x" << rd << ", " << hex << "0x" << (int)C1_imm << "\n";
+					break;
+					
+				default:
+					cout << "\tUnkown C1 Instruction \n";
+			
+			}
+			
+		
+		}
+		
+		else if (funct6 == 35){
+			
+			rd = (instWord >> 7) & 0x0007; // [7:9]
+			funct2 = (instWord >> 5) & 0x0003;	// [5:6]
+			rs2 = (instWord >> 2) & 0x0007; // rs2 [2:4]
 			
 			switch (funct2){
 					
@@ -332,6 +380,9 @@ void instDecExec(unsigned int instWord)
 					
 				case 3: cout <<"\tOR\tx" << rd << ", x" << rd << ", x" << rs2 << "\n"; //C.AND
 					break;
+					
+				default:
+					cout << "\tUnkown C1 Instruction \n";
 		
 			}
 		}
