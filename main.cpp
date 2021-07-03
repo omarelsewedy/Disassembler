@@ -294,13 +294,13 @@ void instDecExec(unsigned int instWord)
 		
 		if (funct3 == 0x2)
 		{
-			cout << "\tLW\tx" << rd << ", " << S_imm << " (x" << rs1 <<") "<< "\n";
+			cout << "\tLW\tx" << rd << ", " << d << " (x" << rs1 <<") "<< "\n";
 		}
 		
 		else
 		{
 			rs2 = rd;
-			cout << "\tSW\tx" << rs2 << ", " << S_imm << " (x" << rs1 <<") "<< "\n";
+			cout << "\tSW\tx" << rs2 << ", " << d << " (x" << rs1 <<") "<< "\n";
 		}
 	
 		
