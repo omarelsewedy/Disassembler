@@ -283,7 +283,29 @@ void instDecExec(unsigned int instWord)
 		
 	if ((opcode = instWord & 0x3 ) == 0x0) //C0 INST OPCODE 00 if (opcode = instWord & 0x3)
 	{
+		opcode = instWord & 0x3; //C OPCODE -> opcode = instWord & 0x2
+		rd = (instWord >> 2) & 0x7;
+		funct3 = (instWord >> 13) & 0x7;
+		rs1 = (instWord >> 7) & 0x7;
+		int a = (instWord >> 5) & 0x1 //imm 6
+		int b = (instWord >> 6) & 0x1 //imm 2
+		int c = (instWord >> 10) & 0x3 //imm[5:3]
+		int d = a + b + c;
 		
+		if (funct3 == 0x2)
+		{
+			cout << "\tLW\tx" << rd << ", " << S_imm << " (x" << rs1 <<") "<< "\n";
+		}
+		
+		else
+		{
+			rs2 = rd;
+			cout << "\tSW\tx" << rs2 << ", " << S_imm << " (x" << rs1 <<") "<< "\n";
+		}
+	
+		
+		//rs2 = (instWord >> 20) & 0x0000001F;
+		//funct7 = (instWord >> 25) & 0x0000007F;
 	}
 		
 	else if ((opcode = instWord & 0x3 ) == 0x1) //C1 INST OPCODE 01
