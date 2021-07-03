@@ -290,8 +290,8 @@ void instDecExec(unsigned int instWord)
 	{
 		
 		
+		ferferf
 		
-		hussein
 		
 	}
 		
