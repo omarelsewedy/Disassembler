@@ -283,13 +283,13 @@ void instDecExec(unsigned int instWord)
 		
 	if ((opcode = instWord & 0x3 ) == 0x0) //C0 INST OPCODE 00 if (opcode = instWord & 0x3)
 	{
-		opcode = instWord & 0x3; //C OPCODE -> opcode = instWord & 0x2
-		rd = (instWord >> 2) & 0x7;
-		funct3 = (instWord >> 13) & 0x7;
-		rs1 = (instWord >> 7) & 0x7;
-		int a = (instWord >> 5) & 0x1 //imm 6
-		int b = (instWord >> 6) & 0x1 //imm 2
-		int c = (instWord >> 10) & 0x3 //imm[5:3]
+		opcode = instWord & 0x0003; //C OPCODE -> opcode = instWord & 0x2
+		rd = (instWord >> 2) & 0x0007;
+		funct3 = (instWord >> 13) & 0x0007;
+		rs1 = (instWord >> 7) & 0x0007;
+		int a = (instWord >> 5) & 0x0001 //imm 6
+		int b = (instWord >> 6) & 0x0001 //imm 2
+		int c = (instWord >> 10) & 0x0003 //imm[5:3]
 		int d = a + b + c;
 		
 		if (funct3 == 0x2)
@@ -311,11 +311,11 @@ void instDecExec(unsigned int instWord)
 	else if ((opcode = instWord & 0x3 ) == 0x1) //C1 INST OPCODE 01
 	{
 		
-				opcode = instWord & 0x0000003; //C OPCODE -> opcode = instWord & 0x2
-		rd = (instWord >> 7) & 0x0000007; // [7:9]
-		funct2 = (instWord >> 5) & 0x00000003;	// [5:6]
-		rs2 = (instWord >> 2) & 0x0000007; // rs2 [2:4]
-		funct6 = (instWord >> 10) & 0x0000003F; // [10:15]
+		opcode = instWord & 0x0003; //C OPCODE -> opcode = instWord & 0x2
+		rd = (instWord >> 7) & 0x0007; // [7:9]
+		funct2 = (instWord >> 5) & 0x0003;	// [5:6]
+		rs2 = (instWord >> 2) & 0x0007; // rs2 [2:4]
+		funct6 = (instWord >> 10) & 0x003F; // [10:15]
 		
 		if ( funct6 == 35){
 			
