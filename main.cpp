@@ -50,7 +50,7 @@ void instDecExec(unsigned int instWord)
 
 	unsigned int instPC = pc - 4;
 
-	opcode = instWord & 0x0000007F;
+	opcode = instWord & 0x0000007F; //C OPCODE -> opcode = instWord & 0x2
 	rd = (instWord >> 7) & 0x0000001F;
 	funct3 = (instWord >> 12) & 0x00000007;
 	rs1 = (instWord >> 15) & 0x0000001F;
@@ -272,26 +272,35 @@ void instDecExec(unsigned int instWord)
 		
 		
 	//C INSTRUCTIONS
-	C_opcode = instWord & 0x0000007F;
+	C_opcode = instWord & 0x0000003;
 	C_rd = (instWord >> 7) & 0x0000001F;
 	C_funct3 = (instWord >> 12) & 0x00000007;
 	C_rs1 = (instWord >> 15) & 0x0000001F;
 	C_rs2 = (instWord >> 20) & 0x0000001F;
 	C_funct7 = (instWord >> 25) & 0x0000007F;
+	C_funct6 = (
 		
 		
-	if (C_opcode == 0x0) //C INST OPCODE 00
+	if ((opcode = instWord & 0x3 ) == 0x0) //C0 INST OPCODE 00 if (opcode = instWord & 0x3)
 	{
 		
 	}
 		
-	else if (C_opcode == 0x1) //C INST OPCODE 01
+	else if ((opcode = instWord & 0x3 ) == 0x1) //C1 INST OPCODE 01
 	{
+		
+		
+		
+		
 		
 	}
 		
-	else if (C_opcode == 0x2) //C INST OPCODE 10
+	else if ((opcode = instWord & 0x3 ) == 0x2) //C2 INST OPCODE 10
 	{
+		
+		
+		
+		
 		
 	}
 	
