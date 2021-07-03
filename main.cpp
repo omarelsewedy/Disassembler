@@ -394,6 +394,28 @@ void instDecExec(unsigned int instWord)
 	{
 		
 		
+		opcode = instWord & 0x0003; //C OPCODE -> opcode = instWord & 0x2
+		//rd = (instWord >> 2) & 0x0007;
+		int funct3 = (instWord >> 12) & 0x000F;
+		rd = (instWord >> 7) & 0x0001F;
+		rs2 = (instWord >> 2) & 0x0000001F;
+		/*int a = (instWord >> 5) & 0x0001 //imm 6
+		int b = (instWord >> 6) & 0x0001 //imm 2
+		int c = (instWord >> 10) & 0x0003 //imm[5:3]
+		int d = a + b + c;*/
+		int shamt2 = (instWord >> 12) & 0x0001;
+		
+		//funct7 = (instWord >> 25) & 0x0000007F;
+		
+		if (funct3 == 0x0)
+			cout << "\tADD\tx" << rd << ", x" << rd << ", x" << rs2 << "\n";
+		else
+		{
+			//I_imm = (instWord >> 25) & 0x0000007F; //imm[5:11]
+			int shamt = (instWord >> 2) & 0x1F; // shift amount [4:0]
+			int x = shamt + shamt2;
+			cout << "\tSLLI\tx" << rd << ", x" << rd << ", " << hex << "0x" << x << "\n";
+		}
 		
 		
 		
